@@ -74,5 +74,5 @@ suma de inversiones activas del usuario, entre otras).
 - Sebastián Pérez
 - Ariel Andrada
 
-Trabajo práctico integrador -- Programación II, Comisión 4 -- Universidad
-Nacional de General Sarmiento (UNGS).
+Trabajo práctico integrador -- Programación II -- Universidad Nacional de
+General Sarmiento (UNGS).
