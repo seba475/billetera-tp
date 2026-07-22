@@ -4,34 +4,42 @@ import java.time.LocalDate;
 
 public class FondoLiquidez extends Inversion {
     
-    private static final double MONTO_MINIMO = 20000000;
-    private static final double TASA_INTERES = 0.08;
-    private static final String ACTIVO = "FLE";
+    private static final double montoMin = 20000000;
+    private static final double tasaInteres = 0.08;
+    private static final String activo = "FLE";
+    private double cotizacionInicial;
     
     public FondoLiquidez(int id, CuentaCorporativa cuenta, double monto, int plazoEnDias) {
         super(id, cuenta, monto, plazoEnDias);
-        if (monto < MONTO_MINIMO) {
-            throw new IllegalArgumentException("FondoLiquidez requiere un monto mínimo de " + MONTO_MINIMO);
+        if (monto < montoMin) {
+            throw new IllegalArgumentException("FondoLiquidez requiere un monto mínimo de " + montoMin);
         }
-    }
-    
-    @Override
-    public double calcularResultado() {
-        double cotizacion = Utilitarios.consultarCotizacion(ACTIVO);
-        return obtenerMonto() * TASA_INTERES * obtenerPlazoEnDias() / 365 * cotizacion;
+        this.cotizacionInicial = Utilitarios.consultarCotizacion(activo);
     }
     
     @Override
     public double calcularResultadoHasta(LocalDate fecha) {
+        // Vemos cuántos días pasaron desde que se hizo la inversión hasta ahora
         long diasTranscurridos = fecha.toEpochDay() - obtenerFechaInicio().toEpochDay();
-        double cotizacion = Utilitarios.consultarCotizacion(ACTIVO);
-        double divisasInvertidas = obtenerMonto() / cotizacion;
-        double interesesEnDivisas = divisasInvertidas * TASA_INTERES * diasTranscurridos / 365;
-        return interesesEnDivisas * cotizacion;
+        
+        // Calculamos cuántas unidades del activo compramos con los pesos invertidos
+        double divisasInvertidas = obtenerMonto() / cotizacionInicial;
+        
+        // Sacamos los intereses que generaron esas unidades en estos días
+        double interesesEnDivisas = divisasInvertidas * (tasaInteres / 365) * diasTranscurridos;
+        
+        // Convertimos los intereses a pesos con la cotización actual
+        double cotizacionActual = Utilitarios.consultarCotizacion(activo);
+        return interesesEnDivisas * cotizacionActual;
     }
     
     @Override
     public void precancelar() {
+        throw new IllegalArgumentException("FondoLiquidez no es precancelable");
+    }
+    
+    @Override
+    public double calcularDevolucionPorPrecancelacion(LocalDate fecha) {
         throw new IllegalArgumentException("FondoLiquidez no es precancelable");
     }
     

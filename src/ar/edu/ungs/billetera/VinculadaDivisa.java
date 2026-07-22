@@ -15,35 +15,29 @@ public class VinculadaDivisa extends Inversion {
         this.cotizacionInicial = Utilitarios.consultarCotizacion(divisa);
     }
     
-    public String obtenerDivisa() {
-        return divisa;
-    }
-    
-    public double obtenerCotizacionInicial() {
-        return cotizacionInicial;
-    }
-    
-    public double obtenerTasaInteres() {
-        return tasaInteres;
-    }
-    
-    @Override
-    public double calcularResultado() {
-        double cotizacion = Utilitarios.consultarCotizacion(divisa);
-        double resultado = obtenerMonto() * tasaInteres * obtenerPlazoEnDias() / 365 * cotizacion;
-        if (estaPrecancelada()) {
-            resultado = resultado / 2;
-        }
-        return resultado;
-    }
-    
     @Override
     public double calcularResultadoHasta(LocalDate fecha) {
+        //Vemos cuántos días pasaron desde que se hizo la inversión hasta ahora
         long diasTranscurridos = fecha.toEpochDay() - obtenerFechaInicio().toEpochDay();
+        
+        // Calculamos cuántos divisas compramos con los pesos invertidos
+        // Usamos la cotización del día que invertimos
         double divisasInvertidas = obtenerMonto() / cotizacionInicial;
-        double interesesEnDivisas = divisasInvertidas * tasaInteres * diasTranscurridos / 365;
+        
+        // Sacamos los intereses que generaron esas divisas en estos días
+        double interesesEnDivisas = divisasInvertidas * (tasaInteres / 365) * diasTranscurridos;
+        
+        // Convertimos esos intereses a pesos, usando la cotización de hoy
         double cotizacionActual = Utilitarios.consultarCotizacion(divisa);
         return interesesEnDivisas * cotizacionActual;
+    }
+    
+    @Override
+    public double calcularDevolucionPorPrecancelacion(LocalDate fecha) {
+        double divisasInvertidas = obtenerMonto() / cotizacionInicial;
+        double intereses = calcularResultadoHasta(fecha) / 2;
+        double cotizacionActual = Utilitarios.consultarCotizacion(divisa);
+        return (divisasInvertidas * cotizacionActual) + intereses;
     }
     
     @Override

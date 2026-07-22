@@ -2,16 +2,16 @@ package ar.edu.ungs.billetera;
 
 public class CuentaPremium extends Cuenta {
 
-    private static final double MONTO_MINIMO = 500000;
+    private static final double montoMin = 500000;
 
     public CuentaPremium(Usuario titular, String cvu, String alias, double depositoInicial) {
         super(titular, cvu, alias);
 
-        if (depositoInicial >= MONTO_MINIMO) {
+        if (depositoInicial >= montoMin) {
             acreditar(depositoInicial);
         } else {
             throw new IllegalArgumentException
-            ("El depósito inicial debe ser de al menos " + MONTO_MINIMO);
+            ("El depósito inicial debe ser de al menos " + montoMin);
         }
     }
 

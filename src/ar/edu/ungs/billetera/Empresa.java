@@ -1,7 +1,7 @@
 package ar.edu.ungs.billetera;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Empresa {
 
@@ -10,7 +10,7 @@ public class Empresa {
     private String telefono;
     private String email;
     private String nombreContacto;
-    private List<String> personasAutorizadas;
+    private Set<String> personasAutorizadas;
 
     public Empresa(String cuit, String nombreFantasia, String telefono, String email, String nombreContacto) {
         this.cuit = cuit;
@@ -18,7 +18,7 @@ public class Empresa {
         this.telefono = telefono;
         this.email = email;
         this.nombreContacto = nombreContacto;
-        this.personasAutorizadas = new ArrayList<>();
+        this.personasAutorizadas = new HashSet<>();
     }
 
     public void agregarAutorizado(String dni) {
@@ -31,13 +31,9 @@ public class Empresa {
     public boolean estaAutorizado(String dni) {
         return personasAutorizadas.contains(dni);
     }
-
-    public String obtenerCuit() {
-        return cuit;
-    }
-
+    
     @Override
     public String toString() {
-        return "(Empresa: " + nombreFantasia + " - CUIT: " + cuit + ")";
+        return "Empresa: " + nombreFantasia + " - CUIT: " + cuit;
     }
 }

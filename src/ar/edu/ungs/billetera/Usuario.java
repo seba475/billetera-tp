@@ -28,8 +28,25 @@ public class Usuario {
         cuentas.add(cta);
     }
     
-    public List<Cuenta> consultarCuentas() {
-        return new ArrayList<>(cuentas);
+    public List<String> listarCuentas() {
+        List<String> resultado = new ArrayList<>();
+        for (Cuenta c : cuentas) {
+            resultado.add(c.toString());
+        }
+        return resultado;
+    }
+    
+    public String buscarCvuPorAlias(String alias) {
+        for (Cuenta c : cuentas) {
+            if (c.obtenerAlias().equals(alias)) {
+                return c.obtenerCvu();
+            }
+        }
+        return null;
+    }
+    
+    public void aportarCuentas(List<Cuenta> destino) {
+        destino.addAll(cuentas);
     }
     
     public void sumarInvertido(double monto) {
@@ -46,6 +63,24 @@ public class Usuario {
         totalInvertido -= monto;
     }
     
+    public void debitarDe(Cuenta cuenta, double monto) {
+        cuenta.debitar(monto);
+    }
+
+    public void acreditarEn(Cuenta cuenta, double monto) {
+        cuenta.acreditar(monto);
+    }
+
+    public void invertirEn(Cuenta cuenta, double monto) {
+        cuenta.debitar(monto);
+        sumarInvertido(monto);
+    }
+
+    public void recibirDevolucion(Cuenta cuenta, double montoDevuelto, double montoInvertido) {
+        cuenta.acreditar(montoDevuelto);
+        restarInvertido(montoInvertido);
+    }
+    
     public double obtenerTotalInvertido() {
         return totalInvertido;
     }
@@ -54,12 +89,17 @@ public class Usuario {
         return dni;
     }
     
-    public String obtenerNombre() {
-        return nombre;
+    public String detalleConCuentas() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(toString()).append("\n");
+        for (Cuenta c : cuentas) {
+            sb.append("- ").append(c.toString()).append(" - Saldo: $").append(c.obtenerSaldo()).append("\n");
+        }
+        return sb.toString();
     }
     
     @Override
     public String toString() {
-        return "(Usuario: " + nombre + " DNI: " + dni + ")";
+        return "Usuario: " + nombre + " DNI: " + dni;
     }
 }

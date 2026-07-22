@@ -57,6 +57,7 @@ public class BilleteraTest {
 
         // Validar historial
         assertEquals(1, billetera.consultarHistorialCuenta(cvuAlice).size());
+        assertEquals(1, billetera.consultarHistorialCuenta(cvuBob).size());
     }
 
     @Test

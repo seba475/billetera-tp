@@ -12,6 +12,9 @@ public abstract class Inversion {
     private boolean precancelada;
     
     public Inversion(int id, Cuenta cuentaOrigen, double monto, int plazoEnDias) {
+        if (monto <= 0) {
+            throw new IllegalArgumentException("El monto debe ser positivo");
+        }
         this.id = id;
         this.cuentaOrigen = cuentaOrigen;
         this.monto = monto;
@@ -44,13 +47,13 @@ public abstract class Inversion {
         return precancelada;
     }
     
-    public void precancelar() {
+    public void precancelar() {	
         this.precancelada = true;
     }
     
-    public abstract double calcularResultado();
-    
     public abstract double calcularResultadoHasta(LocalDate fecha);
+    
+    public abstract double calcularDevolucionPorPrecancelacion(LocalDate fecha);
     
     @Override
     public abstract String toString();

@@ -1,17 +1,25 @@
 package ar.edu.ungs.billetera;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public abstract class Actividad {
     
-    private LocalDateTime fechaHora;
+    private LocalDate fecha;
     private Cuenta cuentaOrigen;
     private boolean aprobada;
     
     public Actividad(Cuenta cuentaOrigen, boolean aprobada) {
         this.cuentaOrigen = cuentaOrigen;
         this.aprobada = aprobada;
-        this.fechaHora = LocalDateTime.now();
+        this.fecha = Utilitarios.hoy();
+    }
+    
+    public boolean involucraCuenta(Cuenta cuenta) {
+        return cuentaOrigen == cuenta;
+    }
+    
+    public boolean involucraUsuario(Usuario usuario) {
+        return cuentaOrigen.obtenerTitular() == usuario;
     }
     
     public Cuenta obtenerCuentaOrigen() {
@@ -22,8 +30,8 @@ public abstract class Actividad {
         return aprobada;
     }
     
-    public LocalDateTime obtenerFechaHora() {
-        return fechaHora;
+    public LocalDate obtenerFecha() {
+        return fecha;
     }
     
     public abstract String toString();

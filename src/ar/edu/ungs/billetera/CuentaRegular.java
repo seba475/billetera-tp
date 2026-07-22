@@ -2,7 +2,7 @@ package ar.edu.ungs.billetera;
 
 public class CuentaRegular extends Cuenta {
     
-    private static final double SALDO_MAXIMO = 5_000_000;
+    private static final double saldoMax = 5000000;
     
     public CuentaRegular(Usuario titular, String cvu, String alias) {
         super(titular, cvu, alias);
@@ -10,7 +10,7 @@ public class CuentaRegular extends Cuenta {
     
     @Override
     public void acreditar(double monto) {
-        if (obtenerSaldo() + monto > SALDO_MAXIMO) {
+        if (obtenerSaldo() + monto > saldoMax) {
             throw new IllegalStateException("Excede el saldo máximo de la cuenta regular");
         }
         super.acreditar(monto);
